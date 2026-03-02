@@ -1,0 +1,187 @@
+/* ========================= */
+/* LIGHT BACKGROUND */
+/* ========================= */
+
+.stApp {
+    background: #f3f6fb;
+}
+
+/* Center login content */
+.block-container {
+    max-width: 480px;
+    margin: auto;
+    padding-top: 40px;
+}
+
+/* Hide Streamlit UI */
+header {visibility: hidden;}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+/* Hide sidebar on login page */
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* ========================= */
+/* CARD STYLE */
+/* ========================= */
+
+.block-container > div {
+    background: white;
+    padding: 30px 40px; /* Reduced vertical padding */
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+/* ========================= */
+/* TITLE */
+/* ========================= */
+
+.login-title {
+  font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0px;
+    letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+   font-size: 14px;
+    color: #6b7280;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+/* ========================= */
+/* TABS */
+/* ========================= */
+
+/* ========================= */
+/* CLEAN TABS (NO DOUBLE LINE) */
+/* ========================= */
+
+button[role="tab"] { 
+    color: #6b7280 !important;  /* default gray */
+    font-weight: 500 !important; } 
+button[role="tab"][aria-selected="true"] { 
+    color: #4f46e5 !important; /* active indigo */
+ } 
+button[role="tab"]:hover { 
+    color: #111827 !important; }
+/* ========================= */
+/* LABEL TEXT */
+/* ========================= */
+
+label {
+    color: #111827 !important;
+    font-weight: 500 !important;
+}
+
+.stMarkdown {
+    color: #6b7280 !important;
+}
+
+/* ========================= */
+/* ========================= */
+/* UNIFORM INPUT & SELECT STYLE */
+/* ========================= */
+
+/* 1. Target the outer wrapper for both Inputs and Selects */
+div[data-baseweb="input"], 
+div[data-baseweb="select"],
+div[data-baseweb="input"] > div,
+div[data-baseweb="select"] > div {
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 2. Remove the stubborn dark background/borders on Password fields and inner containers */
+div[data-baseweb="input"] div, 
+div[data-baseweb="input"] button,
+div[data-baseweb="select"] div {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 3. Global Focus State for the outer border */
+div[data-baseweb="input"]:focus-within, 
+div[data-baseweb="select"]:focus-within {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1) !important;
+}
+
+/* 4. Ensure text is visible and aligned */
+input {
+    color: #111827 !important;
+    padding: 8px 12px !important;
+}
+
+/* 5. Clean up the Eye Icon area specifically */
+div[data-baseweb="input"] [data-testid="stInputAdornment"] {
+    background: transparent !important;
+    border: none !important;
+}
+
+div[data-baseweb="input"] svg {
+    color: #6b7280 !important;
+}
+
+/* ========================= */
+/* SELECT (GENDER) */
+/* ========================= */
+
+div[data-baseweb="select"] > div {
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+}
+
+div[data-baseweb="select"]:focus-within > div {
+    border: 1px solid #4f46e5 !important;
+    box-shadow: 0 0 0 2px rgba(79,70,229,0.08) !important;
+}
+
+/* Dropdown popup */
+div[data-baseweb="popover"] {
+    background-color: white !important;
+}
+
+ul {
+    background-color: white !important;
+}
+
+li {
+    color: #111827 !important;
+}
+
+li:hover {
+    background-color: #f3f4f6 !important;
+}
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+
+.stButton > button {
+   background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border-radius: 12px;
+    height: 45px;
+    width: 100%;
+    font-weight: 600;
+    border: none;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.stButton > button:hover {
+    opacity: 0.9;
+}

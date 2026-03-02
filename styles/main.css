@@ -1,0 +1,92 @@
+/* ========================= */
+/* MAIN APP STYLE */
+/* ========================= */
+
+.stApp {
+    background: #034141; /* Dark Green Background */
+}
+
+/* Remove centered narrow container */
+.block-container {
+    max-width: 1200px;
+    padding-top: 40px;
+}
+
+/* Hide Streamlit UI */
+header {visibility: hidden;}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+/* TITLES & TEXT VISIBILITY */
+h1, h2, h3, [data-testid="stHeader"], [data-testid="stMarkdownContainer"] p {
+    font-weight: 250;
+    color: white !important; /* Force white text for dark background */
+}
+
+/* SETUP & INTERVIEW BOXES */
+.setup-box, .interview-box {
+    background: #045252; 
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* FIX: This removes the "ugly box" when it has no content */
+.interview-box:empty {
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+/* This specifically targets the container Streamlit puts around progress bars to keep it transparent */
+div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stProgress"]) {
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="stProgress"] > div {
+    background: rgba(255,255,255,0.1) !important; /* The bar track */
+}
+
+/* ========================= */
+/* UNIFORM SELECTBOX & INPUTS */
+/* ========================= */
+
+/* This makes Job Role look like the Gender box */
+div[data-baseweb="input"], 
+div[data-baseweb="select"],
+div[data-baseweb="input"] > div,
+div[data-baseweb="select"] > div {
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    color: #111827 !important; /* Dark text inside the light box */
+}
+
+/* Fix text color inside Selectbox */
+div[data-baseweb="select"] span {
+    color: #111827 !important;
+}
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 20px;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* File Uploader styling */
+[data-testid="stFileUploader"] {
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 10px;
+}
