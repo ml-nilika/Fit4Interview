@@ -19,7 +19,15 @@ create_table()
 create_user_table()
 def load_css(file_path):
     with open(file_path) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        css = f.read()
+    st.markdown(
+        f"""
+        <style id="dynamic-style">
+        {css}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 # ================= LOGIN SYSTEM =================
 
 if "logged_in" not in st.session_state:
@@ -76,35 +84,52 @@ if not st.session_state.logged_in:
 
     st.stop()
 st.sidebar.success(f"Logged in as {st.session_state.user_name}")
-# ================= MAIN APP STARTS HERE =================
-st.title("🎯Fit4Interview")
-st.caption("AI-powered interview & job readiness analyzer")
-st.markdown("---")
-
-st.markdown("## 👤 Candidate Information")
 candidate_name = st.session_state.user_name
-st.write(f"Welcome, {candidate_name}")
-st.markdown("---")
-st.header("🎯 Setup Your Interview")
-# Resume + JD
-resume_file = st.file_uploader(
-    "Upload Resume (Optional)",
-    type=["pdf", "docx"]
-)
+# ================= MAIN APP STARTS HERE =================
+# ---------------- HEADER ----------------
+with st.container():
+    # Wrap in a div to match CSS flex logic
+    st.markdown(f'''
+        <div class="main-header">
+            <div class="header-left">
+                <h1>Fit4Interview</h1>
+                <p>AI Interview & Job Readiness Analyzer</p>
+            </div>
+            <div class="header-right">
+                👋 Welcome, {st.session_state.user_name}
+            </div>
+        </div>
+    ''', unsafe_allow_html=True)
+st.divider()
+# ---------------- TWO COLUMN LAYOUT ----------------
+col1, col2 = st.columns([1, 1.2], gap="large")
+with col1:
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("### ⚙️ Setup Your Interview")
+    st.markdown("### 👤 Candidate")
+    st.write(f"Welcome, {st.session_state.user_name}")
 
-jd_text = st.text_area("Paste Job Description (Optional)")
-    
-st.markdown("## 🎯 Select Job Role")
-selected_role = st.selectbox(
-    "Choose the role you are preparing for",
-    list(ROLE_QUESTIONS.keys())
-)
-mode = st.radio(
-    "Choose Interview Mode",
-    ["Practice Mode", "Screening Mode"],
-    horizontal=True
-)
-generate_btn = st.button("🚀 Generate Interview")
+    resume_file = st.file_uploader(
+        "Upload Resume (Optional)",type=["pdf", "docx"]
+    )
+
+    jd_text = st.text_area("Paste Job Description (Optional)")
+
+    selected_role = st.selectbox(
+        "Choose the role you are preparing for",
+        list(ROLE_QUESTIONS.keys())
+    )
+
+    mode = st.radio(
+        "Choose Interview Mode",
+        ["Practice Mode", "Screening Mode"],
+        horizontal=True
+    )
+
+    generate_btn = st.button("🚀 Generate Interview")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # ------------------ SESSION STATE ------------------
 
 
@@ -179,149 +204,150 @@ if "recruiter_dashboard" not in st.session_state:
     st.session_state.recruiter_dashboard = False
 
 # ------------------ CURRENT QUESTION ------------------
-if "generated_questions" in st.session_state and not st.session_state.interview_completed:
-    idx = st.session_state.q_index
-    current = QUESTIONS[idx]
+with col2:
+    if "generated_questions" in st.session_state and not st.session_state.interview_completed:
+        idx = st.session_state.q_index
+        current = QUESTIONS[idx]
 
-# ------------------ PROGRESS INDICATOR ------------------
-    st.caption(f"Question {idx + 1} of {TOTAL_Q}")
-    st.progress((idx + 1) / TOTAL_Q)
+    # ------------------ PROGRESS INDICATOR ------------------
+        st.caption(f"Question {idx + 1} of {TOTAL_Q}")
+        st.progress((idx + 1) / TOTAL_Q)
 
-    st.subheader("Mock Interview Question")
-    st.write(f"**{current['question']}**")
-
-
-    # ------------------ VOICE INPUT ------------------
-    if st.button("🎤 Speak Answer"):
-        with st.spinner("🎧 Listening... Please speak now"):
-            spoken_text, duration = get_voice_text()
-
-        if spoken_text:
-            st.session_state[f"answer_{idx}"] = spoken_text
-            st.session_state.voice_duration[idx] = duration
-            st.success("✅ Voice captured successfully")
-            st.rerun()
-        else:
-            st.warning("❌ Could not understand speech. Please try again.")
-    # ------------------ ANSWER INPUT ------------------
-    st.markdown("## ✍️ Answer Content (What you say)")
-    st.caption("Type or speak your answer, then click Analyze for content evaluation.")
-
-    answer = st.text_area(
-        "Your Answer",
-        height=180,
-        placeholder="Type your answer here...",
-        key=f"answer_{idx}"
-    )
+        st.subheader("Mock Interview Question")
+        st.write(f"**{current['question']}**")
 
 
-    # ------------------ ANALYZE BUTTON ------------------
-    if mode == "Practice Mode":
-        if st.button("🔍 Analyze Answer (Content + Final Score)"):
-            if answer.strip() == "":
-                st.warning("Please write an answer before analyzing.")
+        # ------------------ VOICE INPUT ------------------
+        if st.button("🎤 Speak Answer"):
+            with st.spinner("🎧 Listening... Please speak now"):
+                spoken_text, duration = get_voice_text()
+
+            if spoken_text:
+                st.session_state[f"answer_{idx}"] = spoken_text
+                st.session_state.voice_duration[idx] = duration
+                st.success("✅ Voice captured successfully")
+                st.rerun()
             else:
-                score = analyze_answer(answer, current["ideal"])
-                st.session_state.scores[st.session_state.q_index] = score
-                st.session_state.answers[st.session_state.q_index] = answer
-                st.session_state.score = score
+                st.warning("❌ Could not understand speech. Please try again.")
+        # ------------------ ANSWER INPUT ------------------
+        st.markdown("## ✍️ Answer Content (What you say)")
+        st.caption("Type or speak your answer, then click Analyze for content evaluation.")
 
-    # ------------------ SMART RESULT SECTION ------------------
+        answer = st.text_area(
+            "Your Answer",
+            height=180,
+            placeholder="Type your answer here...",
+            key=f"answer_{idx}"
+        )
 
-    if mode == "Practice Mode" and idx in st.session_state.scores:
 
-        content_score = st.session_state.scores[idx]
-
-        # Check if voice was used
-        voice_score = None
-        if idx in st.session_state.voice_duration:
-            voice_score, voice_feedback = analyze_voice(
-                st.session_state.answers.get(idx, ""),
-                st.session_state.voice_duration[idx]
-            )
-            st.session_state.voice_scores[idx] = voice_score
-
-        # Calculate final score
-        if voice_score is not None:
-            final_score = calculate_final_score(content_score, voice_score)
-        else:
-            final_score = content_score
-
-        st.markdown("## 📊 Overall Interview Score")
-        st.metric("Score", final_score)
-        # ----------------Performance level------------------
-        level=get_performance_label(final_score)
-        st.markdown(f"### 🏷 Level: **{level}**")
-
-        # AI Summary
-        st.markdown("### 🤖 AI Performance Summary")
-
-        with st.spinner("Analyzing performance..."):
-            summary = generate_feedback(
-                current["question"],
-                st.session_state.answers[idx],
-                current["ideal"],
-                content_score,
-                voice_score if voice_score is not None else 0
-            )
-
-        st.info(summary)
-
-        # Show voice insight only if voice used
-        if voice_score is not None:
-            st.markdown("### 🎤 Delivery Insight")
-            st.write(f"Voice Score: {voice_score}")
-            if voice_score < 50:
-                st.warning("Your speaking pace may need improvement.")
-            else:
-                st.success("Your speaking delivery was confident.")
-
-    # ------------------ NAVIGATION ------------------
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("⬅ Previous") and idx > 0:
-            st.session_state.q_index -= 1
-            st.rerun()
-
-    with col2:
-        if st.button("Next ➡"):
-        # 🔥 ALWAYS SAVE ANSWER (Practice + Screening)
-            current_answer = st.session_state.get(f"answer_{idx}", "")
-
-            if current_answer.strip() != "":
-                st.session_state.answers[idx] = current_answer
-                # ================= SAVE TO DATABASE =================
-                content_score = st.session_state.scores.get(idx, 0)
-                voice_score = st.session_state.voice_scores.get(idx, 0)
-
-                if voice_score:
-                    final_score = calculate_final_score(content_score, voice_score)
+        # ------------------ ANALYZE BUTTON ------------------
+        if mode == "Practice Mode":
+            if st.button("🔍 Analyze Answer (Content + Final Score)"):
+                if answer.strip() == "":
+                    st.warning("Please write an answer before analyzing.")
                 else:
-                    final_score = content_score
+                    score = analyze_answer(answer, current["ideal"])
+                    st.session_state.scores[st.session_state.q_index] = score
+                    st.session_state.answers[st.session_state.q_index] = answer
+                    st.session_state.score = score
 
-                data = {
-                    "name": candidate_name,
-                    "role": selected_role,
-                    "question": current["question"],
-                    "answer": current_answer,
-                    "content": content_score if mode == "Practice Mode" else None,
-                    "voice": voice_score if mode == "Practice Mode" else None,
-                    "final": final_score if mode == "Practice Mode" else None,
-                    "mode": mode
-                }
-                if f"saved_{idx}" not in st.session_state:
-                    save_interview(data)
-                    st.session_state[f"saved_{idx}"] = True
-            # Move to next question
-            if idx < TOTAL_Q - 1:
-                st.session_state.q_index += 1
-                st.rerun()
+        # ------------------ SMART RESULT SECTION ------------------
+
+        if mode == "Practice Mode" and idx in st.session_state.scores:
+
+            content_score = st.session_state.scores[idx]
+
+            # Check if voice was used
+            voice_score = None
+            if idx in st.session_state.voice_duration:
+                voice_score, voice_feedback = analyze_voice(
+                    st.session_state.answers.get(idx, ""),
+                    st.session_state.voice_duration[idx]
+                )
+                st.session_state.voice_scores[idx] = voice_score
+
+            # Calculate final score
+            if voice_score is not None:
+                final_score = calculate_final_score(content_score, voice_score)
             else:
-                st.session_state.interview_completed = True
+                final_score = content_score
+
+            st.markdown("## 📊 Overall Interview Score")
+            st.metric("Score", final_score)
+            # ----------------Performance level------------------
+            level=get_performance_label(final_score)
+            st.markdown(f"### 🏷 Level: **{level}**")
+
+            # AI Summary
+            st.markdown("### 🤖 AI Performance Summary")
+
+            with st.spinner("Analyzing performance..."):
+                summary = generate_feedback(
+                    current["question"],
+                    st.session_state.answers[idx],
+                    current["ideal"],
+                    content_score,
+                    voice_score if voice_score is not None else 0
+                )
+
+            st.info(summary)
+
+            # Show voice insight only if voice used
+            if voice_score is not None:
+                st.markdown("### 🎤 Delivery Insight")
+                st.write(f"Voice Score: {voice_score}")
+                if voice_score < 50:
+                    st.warning("Your speaking pace may need improvement.")
+                else:
+                    st.success("Your speaking delivery was confident.")
+
+        # ------------------ NAVIGATION ------------------
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("⬅ Previous") and idx > 0:
+                st.session_state.q_index -= 1
                 st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)
+
+        with col2:
+            if st.button("Next ➡"):
+            # 🔥 ALWAYS SAVE ANSWER (Practice + Screening)
+                current_answer = st.session_state.get(f"answer_{idx}", "")
+
+                if current_answer.strip() != "":
+                    st.session_state.answers[idx] = current_answer
+                    # ================= SAVE TO DATABASE =================
+                    content_score = st.session_state.scores.get(idx, 0)
+                    voice_score = st.session_state.voice_scores.get(idx, 0)
+
+                    if voice_score:
+                        final_score = calculate_final_score(content_score, voice_score)
+                    else:
+                        final_score = content_score
+
+                    data = {
+                        "name": candidate_name,
+                        "role": selected_role,
+                        "question": current["question"],
+                        "answer": current_answer,
+                        "content": content_score if mode == "Practice Mode" else None,
+                        "voice": voice_score if mode == "Practice Mode" else None,
+                        "final": final_score if mode == "Practice Mode" else None,
+                        "mode": mode
+                    }
+                    if f"saved_{idx}" not in st.session_state:
+                        save_interview(data)
+                        st.session_state[f"saved_{idx}"] = True
+                # Move to next question
+                if idx < TOTAL_Q - 1:
+                    st.session_state.q_index += 1
+                    st.rerun()
+                else:
+                    st.session_state.interview_completed = True
+                    st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 if st.session_state.interview_completed:
 
     st.markdown("## 🎉 Interview Completed")

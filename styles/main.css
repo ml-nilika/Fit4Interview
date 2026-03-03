@@ -1,92 +1,198 @@
-/* ========================= */
-/* MAIN APP STYLE */
-/* ========================= */
+/* =======================================================
+   FIT4INTERVIEW – MAIN DASHBOARD CSS
+   Clean SaaS Style (Login-Matching Version)
+======================================================= */
 
-.stApp {
-    background: #034141; /* Dark Green Background */
+
+/* ---------------- RESET & BASE ---------------- */
+
+body {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+    opacity: 1 !important;
 }
 
-/* Remove centered narrow container */
+.stApp {
+    background: #f3f4f6;
+}
+/* ---------- FORCE PROPER TEXT VISIBILITY ---------- */
+
+h1, h2, h3, h4, h5, h6,
+p, span, label, div {
+    color: #1f2937 !important;
+}
+
+/* Remove default streamlit padding */
 .block-container {
+    padding-top: 30px;
+    padding-bottom: 40px;
     max-width: 1200px;
     padding-top: 40px;
 }
 
-/* Hide Streamlit UI */
+/* Hide Streamlit default UI */
 header {visibility: hidden;}
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 
-/* TITLES & TEXT VISIBILITY */
-h1, h2, h3, [data-testid="stHeader"], [data-testid="stMarkdownContainer"] p {
-    font-weight: 250;
-    color: white !important; /* Force white text for dark background */
+
+/* ---------------- TEXT COLORS FIX ---------------- */
+
+.stCaption {
+    color: #6b7280 !important;
 }
 
-/* SETUP & INTERVIEW BOXES */
-.setup-box, .interview-box {
-    background: #045252; 
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-bottom: 30px;
-    border: 1px solid rgba(255,255,255,0.1);
+
+/* ---------------- HEADER ---------------- */
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0px !important; /* Removes gap below header */
+    padding-bottom: 0px !important;
 }
 
-/* FIX: This removes the "ugly box" when it has no content */
-.interview-box:empty {
+.header-left h1 {
+    color: #5B5FEF;
+    font-weight: 700;
+    margin-bottom: -5px !important; /* Pulls subtitle closer */
+    letter-spacing: -1px
+}
+
+.header-left p {
+    color: #6b7280 !important;
+    margin-top: 5px;
+}
+
+.header-right {
+    background: #eef2ff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    color: #4f46e5 !important;
+    font-size: 0.85rem;
+    border: 1px solid #e0e7ff;
+}
+/* Hide any empty ghost containers */
+/* div:empty {
     display: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
+}
+/* Remove Streamlit default gap between blocks */
+[data-testid="stVerticalBlock"] {
+    gap: 0.5rem !important;
+} */
+/* ---------------- CARD STYLE ---------------- */
+
+.card-container {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    margin-top: 15px;
 }
 
-/* This specifically targets the container Streamlit puts around progress bars to keep it transparent */
-div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stProgress"]) {
-    background: transparent !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-}
 
-div[data-testid="stProgress"] > div {
-    background: rgba(255,255,255,0.1) !important; /* The bar track */
-}
+/* ---------------- INPUT FIELDS ---------------- */
 
-/* ========================= */
-/* UNIFORM SELECTBOX & INPUTS */
-/* ========================= */
-
-/* This makes Job Role look like the Gender box */
-div[data-baseweb="input"], 
-div[data-baseweb="select"],
 div[data-baseweb="input"] > div,
-div[data-baseweb="select"] > div {
+div[data-baseweb="select"] > div,
+textarea {
     background-color: #f9fafb !important;
     border: 1px solid #e5e7eb !important;
-    border-radius: 12px !important;
-    box-shadow: none !important;
-    color: #111827 !important; /* Dark text inside the light box */
-}
-
-/* Fix text color inside Selectbox */
-div[data-baseweb="select"] span {
+    border-radius: 14px !important;
     color: #111827 !important;
 }
 
-/* Buttons */
-.stButton > button {
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-    color: white;
-    border-radius: 12px;
-    padding: 10px 20px;
-    border: none;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af !important;
 }
 
-/* File Uploader styling */
+
+/* ---------------- FILE UPLOADER ---------------- */
+
+/* ---------------- PREMIUM FILE UPLOADER ---------------- */
+
 [data-testid="stFileUploader"] {
-    background-color: rgba(255,255,255,0.05);
+    background-color: #ffffff !important;
+    border: 2px dashed #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    box-shadow: none !important; /* Removes the inner shadow */
+}
+
+[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Fix the text inside the uploader */
+[data-testid="stFileUploader"] section div div {
+    color: #475569 !important;
+}
+
+/* Premium Browse Files Button */
+[data-testid="stFileUploaderDropzone"] button {
+    background: #4f46e5 !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2) !important;
+}
+/* ---------------- BUTTONS ---------------- */
+
+.stButton > button {
+    background: linear-gradient(135deg, #5B5FEF, #6D6BFF);
+    color: white !important;
+    border-radius: 14px;
+    padding: 10px 24px;
+    border: none;
+    font-weight: 500;
+    box-shadow: 0 6px 15px rgba(91, 95, 239, 0.3);
+    transition: 0.2s ease-in-out;
+}
+
+.stButton > button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+
+/* ---------------- PROGRESS BAR ---------------- */
+
+div[data-testid="stProgress"] > div > div {
+    background: linear-gradient(135deg, #5B5FEF, #6D6BFF) !important;
+}
+
+
+/* ---------------- METRIC ---------------- */
+
+[data-testid="stMetricValue"] {
+    color: #111827 !important;
+    font-weight: 600;
+}
+
+
+/* ---------------- BAR CHART ---------------- */
+
+canvas {
     border-radius: 12px;
-    padding: 10px;
+}
+
+
+/* ---------------- TEXT SELECTION FIX ---------------- */
+
+::selection {
+    background: #e0e7ff;
+    color: #111827;
+}
+
+::-moz-selection {
+    background: #e0e7ff;
+    color: #111827;
 }
